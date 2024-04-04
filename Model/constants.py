@@ -1,0 +1,58 @@
+# dùng để chứa các thông số pixel hay size
+TILEWIDTH = 16
+TILEHEIGHT = 16
+NROWS = 36
+NCOLS = 28
+SCREENWIDTH = NCOLS*TILEWIDTH # 28*16
+SCREENHEIGHT = NROWS*TILEHEIGHT # 36*16
+SCREENSIZE = (SCREENWIDTH, SCREENHEIGHT)
+
+STATE1 = 1
+STATE2 = 2
+fps = 60
+
+BLACK = (0, 0, 0)
+YELLOW = (255, 255, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+PINK = (255, 100, 150)
+TEAL = (100, 255, 255)
+ORANGE = (230, 190, 40)
+GREEN = (0, 255, 0)
+
+STOP = 0
+UP = 1
+DOWN = -1
+LEFT = 2
+RIGHT = -2
+
+PORTAL = 3
+
+PACMAN = 0
+PELLET = 1
+POWERPELLET = 2
+GHOST = 3
+
+# 4 chế độ cho ghost
+SCATTER = 0
+CHASE = 1
+FREIGHT = 2
+SPAWN = 3
+
+# ghost
+BLINKY = 4
+PINKY = 5
+INKY = 6
+CLYDE = 7
+FRUIT = 8
+
+SCORETXT = 0
+LEVELTXT = 1
+READYTXT = 2
+PAUSETXT = 3
+GAMEOVERTXT = 4
+SCORETXT2 = 5
+
+SHEET1 = "asset/spritesheet.png"
+SHEET2 = "asset/spritesheet_mspacman.png"
+SHEET3 = "asset/spritesheetpacman2.png"
