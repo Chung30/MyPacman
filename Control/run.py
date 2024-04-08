@@ -232,10 +232,11 @@ class GameController(object):
                     self.ghosts.startFreight()
                 if self.pellets.isEmpty():
                     self.showEntities(STATE)
-                    if self.level == 2:
-                        print(True)
+                    print(self.level)
+                    if self.level == 0:
                         self.textgroup.showText(WINTXT)
-                        self.pause.setPause(pauseTime=3, func=self.restartGame)
+                        print(True)
+                        self.pause.setPause(pauseTime=10, func=self.restartGame)
                         print(self.score)
                     else:
                         self.pause.setPause(pauseTime=3, func=self.nextLevel)
@@ -259,9 +260,6 @@ class GameController(object):
                 self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
 if __name__ == "__main__":
-    pygame.mixer.init()
-    sound = pygame.mixer.Sound("asset/pacman_sound.ogg")
-    sound.play(-1)
     STATE = STATE1
     game = GameController()
     game.startGame(STATE)
