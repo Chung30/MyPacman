@@ -67,6 +67,10 @@ class TextGroup(object):
         self.alltext[PAUSETXT] = Text("PAUSED!", YELLOW, 10.625 * TILEWIDTH, 20 * TILEHEIGHT, size, visible=False)
         self.alltext[GAMEOVERTXT] = Text("GAMEOVER!", YELLOW, 10 * TILEWIDTH, 20 * TILEHEIGHT, size, visible=False)
         self.addText("SCORE", WHITE, 0, 0, size)
+
+        self.alltext[WINTXT] = Text("WIN!", YELLOW, 12.25 * TILEWIDTH, 20 * TILEHEIGHT, size, visible=False)
+        self.alltext[WINPLAYER1] = Text("PLAYER1", YELLOW, 10.5 * TILEWIDTH, 20 * TILEHEIGHT, size, visible=False)
+        self.alltext[WINPLAYER2] = Text("PLAYER2", YELLOW, 10.5 * TILEWIDTH, 20 * TILEHEIGHT, size, visible=False)
         if STATE == STATE2:
             self.addText("SCORE", WHITE, 23 * TILEWIDTH, 0, size)
         else:
@@ -86,6 +90,9 @@ class TextGroup(object):
         self.alltext[READYTXT].visible = False
         self.alltext[PAUSETXT].visible = False
         self.alltext[GAMEOVERTXT].visible = False
+        self.alltext[WINTXT].visible = False
+        self.alltext[WINPLAYER1].visible = False
+        self.alltext[WINPLAYER2].visible = False
 
     def updateScore(self, score):
         self.updateText(SCORETXT, str(score).zfill(8))

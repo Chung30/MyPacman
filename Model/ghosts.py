@@ -85,7 +85,6 @@ class Pinky(Ghost):
     def chase(self):
         self.goal = self.pacman.position + self.pacman.directions[self.pacman.direction] * TILEWIDTH * 4
 
-
 class Inky(Ghost):
     def __init__(self, node, pacman=None, blinky=None):
         Ghost.__init__(self, node, pacman, blinky)

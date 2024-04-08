@@ -52,6 +52,9 @@ READYTXT = 2
 PAUSETXT = 3
 GAMEOVERTXT = 4
 SCORETXT2 = 5
+WINTXT = 6
+WINPLAYER1 = 7
+WINPLAYER2 = 8
 
 SHEET1 = "asset/spritesheet.png"
 SHEET2 = "asset/spritesheet_mspacman.png"

@@ -12,7 +12,6 @@ from Model.fruit import Fruit
 from Model.text import TextGroup
 from View.sprites import LifeSprites, MazeSprites
 
-
 class GameController(object):
     def __init__(self):
         pygame.init()
@@ -34,10 +33,11 @@ class GameController(object):
         self.pause.paused = True
         self.fruit = None
         self.startGame(STATE)
+        self.textgroup.showText(READYTXT)
         self.score = 0
         self.textgroup.updateScore(self.score)
         self.textgroup.updateLevel(self.level)
-        self.textgroup.showText(READYTXT)
+        self.lifesprites = LifeSprites(self.lives)
 
     def resetLevel(self):
         self.pause.paused = True
@@ -53,6 +53,7 @@ class GameController(object):
         self.pause.paused = True
         self.startGame(STATE)
         self.textgroup.updateLevel(self.level)
+        self.textgroup.showText(READYTXT)
 
     def setBackground(self):
         self.background = pygame.surface.Surface(SCREENSIZE).convert()
@@ -133,7 +134,7 @@ class GameController(object):
                 self.textgroup.addText(str(self.fruit.points), WHITE, self.fruit.position.x,
                                        self.fruit.position.y, 8, time=1)
                 self.fruit = None
-            elif self.pacman2.collideCheck(self.fruit):
+            elif STATE == STATE2 and self.pacman2.collideCheck(self.fruit):
                 self.updateScore2(self.fruit.points)
                 self.textgroup.addText(str(self.fruit.points), WHITE, self.fruit.position.x,
                                        self.fruit.position.y, 8, time=1)
@@ -148,6 +149,7 @@ class GameController(object):
                     self.pacman.visible = False
                     ghost.visible = False
                     self.updateScore(ghost.points)
+                    ## khi ăn ghost
                     self.textgroup.addText(str(ghost.points), WHITE, ghost.position.x, ghost.position.y, 8, time=1)
                     self.ghosts.updatePoints()
                     self.pause.setPause(pauseTime=0, func=self.showEntities(STATE))
@@ -161,6 +163,7 @@ class GameController(object):
                         self.ghosts.hide()
                         if self.lives <= 0:
                             self.textgroup.showText(GAMEOVERTXT)
+                            ## khi gameover
                             self.pause.setPause(pauseTime=3, func=self.restartGame)
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
@@ -219,6 +222,7 @@ class GameController(object):
             if pellet:
                 self.pellets.numEaten += 1
                 self.updateScore(pellet.points)
+                ## sound khi ăn
                 if self.pellets.numEaten == 30:
                     self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
                 if self.pellets.numEaten == 70:
@@ -227,9 +231,15 @@ class GameController(object):
                 if pellet.name == POWERPELLET:
                     self.ghosts.startFreight()
                 if self.pellets.isEmpty():
-                    self.hideEntities(STATE)
-                    print('win1')
-                    self.pause.setPause(pauseTime=3, func=self.nextLevel)
+                    self.showEntities(STATE)
+                    if self.level == 2:
+                        print(True)
+                        self.textgroup.showText(WINTXT)
+                        self.pause.setPause(pauseTime=3, func=self.restartGame)
+                        print(self.score)
+                    else:
+                        self.pause.setPause(pauseTime=3, func=self.nextLevel)
+
         elif STATE == STATE2:
             pellet = self.pacman.eatPellets(self.pellets.pelletList)
             pellet2 = self.pacman2.eatPellets(self.pellets.pelletList)
@@ -237,22 +247,22 @@ class GameController(object):
                 self.pellets.numEaten += 1
                 self.updateScore(pellet.points)
                 self.pellets.pelletList.remove(pellet)
-                if self.pellets.isEmpty():
-                    self.hideEntities(STATE)
-                    print('win1')
-                    self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
             if pellet2:
                 self.pellets.numEaten += 1
                 self.updateScore2(pellet2.points)
                 self.pellets.pelletList.remove(pellet2)
-                if self.pellets.isEmpty():
-                    self.hideEntities(STATE)
-                    print('win2')
-                    self.pause.setPause(pauseTime=3, func=self.nextLevel)
+
+            if self.pellets.isEmpty():
+                # self.hideEntities(STATE)
+                self.textgroup.showText(WINPLAYER1 if self.score > self.score2 else WINPLAYER2)
+                self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
 if __name__ == "__main__":
-    STATE = STATE2
+    pygame.mixer.init()
+    sound = pygame.mixer.Sound("asset/pacman_sound.ogg")
+    sound.play(-1)
+    STATE = STATE1
     game = GameController()
     game.startGame(STATE)
     while True:
