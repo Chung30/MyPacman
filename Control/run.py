@@ -61,6 +61,9 @@ class GameController(object):
         self.background.fill(BLACK)
 
     def startGame(self):
+        pygame.mixer.music.load("asset/sound_intro.mp3")
+        pygame.mixer.music.set_volume(0.8)
+        pygame.mixer.music.play()
         # self.mazedata.loadMaze(self.level)
         self.setBackground()
         self.mazesprites = MazeSprites("map/maze1.txt", "map/maze1_rotation.txt")
@@ -146,6 +149,7 @@ class GameController(object):
     def checkGhostEvents(self):
         for ghost in self.ghosts:
             if self.pacman.collideGhost(ghost):
+
                 if ghost.mode.current is FREIGHT:
                     self.pacman.visible = False
                     ghost.visible = False
@@ -165,6 +169,9 @@ class GameController(object):
                         if self.lives <= 0:
                             self.textgroup.showText(GAMEOVERTXT)
                             ## khi gameover
+                            pygame.mixer.music.load("asset/sound_death.mp3")
+                            pygame.mixer.music.play()
+
                             self.pause.setPause(pauseTime=3, func=self.restartGame)
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
@@ -224,6 +231,7 @@ class GameController(object):
                 self.pellets.numEaten += 1
                 self.updateScore(pellet.points)
                 ## sound khi ăn
+
                 if self.pellets.numEaten == 30:
                     self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
                 if self.pellets.numEaten == 70:
@@ -280,6 +288,7 @@ def saveScore(score):
         print("Error: Unable to save high score.")
 
 if __name__ == "__main__":
+
     STATE = STATE1
     game = GameController(STATE)
     game.startGame()
