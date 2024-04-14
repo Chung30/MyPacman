@@ -1,0 +1,13 @@
+Mục tiêu: Người chơi điều khiển nhân vật Pac-Man để ăn hết tất cả các viên thức ăn trên màn chơi mà không bị bắt được bởi các hồn ma.
+
+Điều khiển: Người chơi sử dụng các phím mũi tên hoặc các phím tương tự trên bàn điều khiển để di chuyển Pac-Man lên, xuống, sang trái hoặc sang phải.
+
+Thức ăn: Các viên thức ăn sẽ xuất hiện ở khắp nơi trên màn chơi. Khi Pac-Man ăn một viên thức ăn, điểm số của người chơi sẽ tăng lên.
+
+Ma: Trong khi Pac-Man điều hướng trên màn chơi, có các hồn ma di chuyển trong đó. Nếu Pac-Man va chạm vào một trong số chúng, một mạng sẽ bị mất.
+
+Mạng và Điểm số: Người chơi bắt đầu với một số lượng mạng nhất định. Khi Pac-Man bị bắt bởi ma, một mạng sẽ bị mất. Mục tiêu của người chơi là giữ cho Pac-Man sống sót càng lâu càng tốt và đạt được số điểm cao nhất có thể.
+
+Viên sức mạnh: Ngoài các viên điểm, có những viên đặc biệt gọi là viên sức mạnh. Khi Pac-Man ăn một viên sức mạnh, các hồn ma sẽ biến thành màu xanh dương và trở nên yếu hơn trong một khoảng thời gian dài hơn, cho phép Pac-Man ăn chúng và kiếm thêm điểm số.
+
+Chế độ 2 người chơi: Ở chế độ này, hai người chơi điều khiển hai Pac-man riêng biệt. Mỗi người chơi có một phím điều khiển riêng để di chuyển Pac-man của mình. Trò chơi kết thúc khi viên thức ăn cuối cùng được ăn bởi Pac-man của một trong hai người chơi, người chơi nào có số điểm cao hơn sẽ chiến thắng, hoặc là một trong hai người chơi bị mất hết số mạng chơi chiến thắng sẽ thuộc về người còn lại

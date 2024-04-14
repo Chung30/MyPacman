@@ -13,7 +13,7 @@ from Model.text import TextGroup
 from View.sprites import LifeSprites, MazeSprites
 
 class GameController(object):
-    def __init__(self, STATE):
+    def __init__(self, STATE, name):
         pygame.init()
         self.screen = pygame.display.set_mode(SCREENSIZE, 0, 32)
         self.background = None
@@ -25,6 +25,7 @@ class GameController(object):
         self.score = 0
         self.score2 = 0
         self.STATE = STATE
+        self.Name = name
         self.textgroup = TextGroup(self.STATE)
         self.lifesprites = LifeSprites(self.lives)
 
@@ -61,9 +62,7 @@ class GameController(object):
         self.background.fill(BLACK)
 
     def startGame(self):
-        pygame.mixer.music.load("asset/sound_intro.mp3")
-        pygame.mixer.music.set_volume(0.8)
-        pygame.mixer.music.play()
+        self.check_sound("asset/sound_intro.mp3")
         # self.mazedata.loadMaze(self.level)
         self.setBackground()
         self.mazesprites = MazeSprites("map/maze1.txt", "map/maze1_rotation.txt")
@@ -76,7 +75,7 @@ class GameController(object):
         self.pacman = Pacman(self.nodes.getNodeFromTiles(15, 26))  #(1, 4)
         self.nodes.denyHomeAccess(self.pacman)
         if self.STATE == STATE2:
-            self.pacman2 = Pacman2(self.nodes.getNodeFromTiles(12, 8)) # Trường hợp chơi 2 nguời
+            self.pacman2 = Pacman2(self.nodes.getNodeFromTiles(12, 8))  # Trường hợp chơi 2 nguời
             self.nodes.denyHomeAccess(self.pacman2)
         else:
             self.ghosts = GhostGroup(self.nodes.getStartTempNode(), self.pacman)
@@ -84,7 +83,7 @@ class GameController(object):
             self.ghosts.pinky.setStartNode(self.nodes.getNodeFromTiles(2 + 11.5, 3 + 14))
             self.ghosts.inky.setStartNode(self.nodes.getNodeFromTiles(0 + 11.5, 3 + 14))
             self.ghosts.clyde.setStartNode(self.nodes.getNodeFromTiles(4 + 11.5, 3 + 14))
-            self.ghosts.setSpawnNode(self.nodes.getNodeFromTiles(2+11.5, 3+14))
+            self.ghosts.setSpawnNode(self.nodes.getNodeFromTiles(2 + 11.5, 3 + 14))
             # khi bắt đầu phải từ nhà đi ra
             self.nodes.denyHomeAccessList(self.ghosts)
             self.nodes.denyAccessList(2 + 11.5, 3 + 14, LEFT, self.ghosts)
@@ -98,7 +97,7 @@ class GameController(object):
         self.pellets = PelletGroup("map/maze1.txt")
 
     def update(self):
-        dt = self.clock.tick(30) / 1000.0 # delta time = tg hiện tại - tg trước
+        dt = self.clock.tick(30) / 1000.0  # delta time = tg hiện tại - tg trước
         self.textgroup.update(dt)
         self.pellets.update(dt)
         if not self.pause.paused:
@@ -135,10 +134,11 @@ class GameController(object):
         if self.fruit is not None:
             if self.pacman.collideCheck(self.fruit):
                 self.updateScore(self.fruit.points)
+                self.check_sound("asset/pacman_eatfruit.wav")
                 self.textgroup.addText(str(self.fruit.points), WHITE, self.fruit.position.x,
                                        self.fruit.position.y, 8, time=1)
                 self.fruit = None
-            elif STATE == STATE2 and self.pacman2.collideCheck(self.fruit):
+            elif self.STATE == STATE2 and self.pacman2.collideCheck(self.fruit):
                 self.updateScore2(self.fruit.points)
                 self.textgroup.addText(str(self.fruit.points), WHITE, self.fruit.position.x,
                                        self.fruit.position.y, 8, time=1)
@@ -149,11 +149,11 @@ class GameController(object):
     def checkGhostEvents(self):
         for ghost in self.ghosts:
             if self.pacman.collideGhost(ghost):
-
                 if ghost.mode.current is FREIGHT:
                     self.pacman.visible = False
                     ghost.visible = False
                     self.updateScore(ghost.points)
+                    self.check_sound("asset/pacman_eatghost.wav")
                     ## khi ăn ghost
                     self.textgroup.addText(str(ghost.points), WHITE, ghost.position.x, ghost.position.y, 8, time=1)
                     self.ghosts.updatePoints()
@@ -162,6 +162,7 @@ class GameController(object):
                     self.nodes.allowHomeAccess(ghost)
                 elif ghost.mode.current is not SPAWN:
                     if self.pacman.alive:
+                        self.check_sound("asset/sound_death.mp3")
                         self.lives -= 1
                         self.lifesprites.removeImage()
                         self.pacman.die()
@@ -169,9 +170,7 @@ class GameController(object):
                         if self.lives <= 0:
                             self.textgroup.showText(GAMEOVERTXT)
                             ## khi gameover
-                            pygame.mixer.music.load("asset/sound_death.mp3")
-                            pygame.mixer.music.play()
-
+                            #quay lai man hinh cho
                             self.pause.setPause(pauseTime=3, func=self.restartGame)
                         else:
                             self.pause.setPause(pauseTime=3, func=self.resetLevel)
@@ -231,7 +230,7 @@ class GameController(object):
                 self.pellets.numEaten += 1
                 self.updateScore(pellet.points)
                 ## sound khi ăn
-
+                self.check_sound("asset/sound_chomp1.wav")
                 if self.pellets.numEaten == 30:
                     self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
                 if self.pellets.numEaten == 70:
@@ -244,13 +243,14 @@ class GameController(object):
                     print(self.level)
                     if self.level == 0:
                         self.textgroup.showText(WINTXT)
-                        saveScore(self.score)
+                        saveScore(self.Name,self.score)
+                        # sau khi thang quay lai man hinh cho
                         self.pause.setPause(pauseTime=3, func=self.restartGame)
                         print(self.score)
                     else:
                         self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
-        elif STATE == STATE2:
+        elif self.STATE == STATE2:
             pellet = self.pacman.eatPellets(self.pellets.pelletList)
             pellet2 = self.pacman2.eatPellets(self.pellets.pelletList)
             if pellet:
@@ -266,16 +266,25 @@ class GameController(object):
             if self.pellets.isEmpty():
                 # self.hideEntities(STATE)
                 self.textgroup.showText(WINPLAYER1 if self.score > self.score2 else WINPLAYER2)
-                self.pause.setPause(pauseTime=3, func=self.nextLevel)
+            # quay lai man hinh cho
+                self.restartGame()
+    def check_sound(self,path : str):
+        with open("asset/setting.txt","r") as file:
+            check = int(file.read().strip())
+            if check == 1:
+                pygame.mixer.music.load(path)
+                pygame.mixer.music.set_volume(0.8)
+                pygame.mixer.music.play()
+    def returntomain(self):
+        pygame.quit()
 
-
-def saveScore(score):
+def saveScore(name, score):
     try:
         try:
             with open("asset/SaveScore.txt", "r") as file:
-                hightScore = file.read().strip()
-                if hightScore:
-                    high_score = int(hightScore)
+                hightScore = file.read().split(" ")
+                if hightScore[1]:
+                    high_score = int(hightScore[1])
                 else:
                     high_score = 0
         except FileNotFoundError:
@@ -283,14 +292,8 @@ def saveScore(score):
 
         if score > high_score:
             with open("asset/SaveScore.txt", "w") as file:
-                file.write(str(score))
+                file.write(name + " " + str(score))
     except IOError:
         print("Error: Unable to save high score.")
 
-if __name__ == "__main__":
 
-    STATE = STATE1
-    game = GameController(STATE)
-    game.startGame()
-    while True:
-        game.update()
